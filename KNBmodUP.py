@@ -67,20 +67,6 @@ class Bot():
 
 
     def on_game_end(self) -> None:
-        print(f"Процент побед: {sum(self.wins_me) / (sum(self.wins_op) + sum(self.wins_me)) * 100:.2f}%")
+        # print(f"Процент побед: {sum(self.wins_me) / (sum(self.wins_op) + sum(self.wins_me)) * 100:.2f}%")
+        pass
 
-
-if __name__ == "__main__":
-    raunds = 500
-    sets = 10
-
-    bot1 = Bot()
-    bot1.on_game_start()
-
-    for i in range (0, sets):
-        bot1.choose(52)
-        
-        for j in range (0, raunds):
-            bot1.choose(randint(1, 3))
-            
-        bot1.on_game_end()

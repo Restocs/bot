@@ -45,7 +45,7 @@ def play_game(bot1, bot2):
     prev_bot2_choice = 0
 
     for set_number in range(1, MAX_SETS + 1):
-        print(f'--- Set {set_number} ---')
+        # print(f'--- Set {set_number} ---')
         bot1_points = 0
         bot2_points = 0
         bot1_wins = 0
@@ -55,7 +55,7 @@ def play_game(bot1, bot2):
 
         while bot1_wins < WINS_PER_SET and bot2_wins < WINS_PER_SET and round_number < MAX_ROUNDS_PER_SET:
             round_number += 1
-            print(f'--- Round {round_number} ---')
+            # print(f'--- Round {round_number} ---')
 
             bot1_choice = bot1.choose(prev_bot2_choice)
             bot2_choice = bot2.choose(prev_bot1_choice)
@@ -71,54 +71,54 @@ def play_game(bot1, bot2):
                 print(f'Error: Bot2 made an invalid choice: {bot2_choice}')
                 break
 
-            print('Bot1 chose:', bot1_choice)
-            print('Bot2 chose:', bot2_choice)
+            # print('Bot1 chose:', bot1_choice)
+            # print('Bot2 chose:', bot2_choice)
 
             # Determine the winner of the round
             result = determine_winner(bot1_choice, bot2_choice)
 
             if result == 'Bot1':
-                print('Bot1 wins the round!')
+                # print('Bot1 wins the round!')
                 bot1_points += 3
                 bot1_wins += 1
                 consecutive_draws = 0
             elif result == 'Bot2':
-                print('Bot2 wins the round!')
+                # print('Bot2 wins the round!')
                 bot2_points += 3
                 bot2_wins += 1
                 consecutive_draws = 0
             else:
-                print("It's a draw!")
+                # print("It's a draw!")
                 bot1_points += 1
                 bot2_points += 1
                 consecutive_draws += 1
 
                 if consecutive_draws == MAX_CONSECUTIVE_DRAWS:
-                    print('10 draws in a row! The set is a draw!')
+                    # print('10 draws in a row! The set is a draw!')
                     break
 
-            print(f'Current Score: Bot1 Points - {bot1_points}, Bot2 Points - {bot2_points}')
+            # print(f'Current Score: Bot1 Points - {bot1_points}, Bot2 Points - {bot2_points}')
 
             # Determine the winner of the set
             if consecutive_draws == MAX_CONSECUTIVE_DRAWS or (round_number == MAX_ROUNDS_PER_SET and bot1_wins == bot2_wins):
-                print(f'Set {set_number} ends in a draw!')
+                # print(f'Set {set_number} ends in a draw!')
                 bot1_set_wins += 1
                 bot2_set_wins += 1
             elif bot1_wins >= WINS_PER_SET:
-                print(f'Bot1 wins Set {set_number} by rounds!')
+                # print(f'Bot1 wins Set {set_number} by rounds!')
                 bot1_set_wins += 1
             elif bot2_wins >= WINS_PER_SET:
-                print(f'Bot2 wins Set {set_number} by rounds!')
+                # print(f'Bot2 wins Set {set_number} by rounds!')
                 bot2_set_wins += 1
             elif round_number == MAX_ROUNDS_PER_SET:
                 if bot1_points > bot2_points:
-                    print(f'Bot1 wins Set {set_number} by points!')
+                    # print(f'Bot1 wins Set {set_number} by points!')
                     bot1_set_wins += 1
                 elif bot2_points > bot1_points:
-                    print(f'Bot2 wins Set {set_number} by points!')
+                    # print(f'Bot2 wins Set {set_number} by points!')
                     bot2_set_wins += 1
                 else:
-                    print(f'Set {set_number} ends in a draw by points!')
+                    # print(f'Set {set_number} ends in a draw by points!')
                     bot1_set_wins += 1
                     bot2_set_wins += 1
 
@@ -140,7 +140,7 @@ def select_files():
     root = Tk()
     root.withdraw()  # Hide the main window
 
-    bot1_file = "bot1.py"
+    bot1_file = "BOTINOK.py"
     if not bot1_file:
         print("Bot 1 file not selected. Exiting.")
         return

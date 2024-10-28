@@ -2,11 +2,7 @@ from random import randint, choices
 
 class Bot():
     def calculate_probabilities(self, P_A, P_B_given_A, P_B):
-        if P_B == 0:
-            raise ValueError("P(B) не может быть равна нулю, так как это приведет к делению на ноль.")
-        
-        P_A_given_B = (P_B_given_A * P_A) / P_B
-        return P_A_given_B
+        return (P_B_given_A * P_A) / P_B
     
     def is_win(self, self_choice, opponent_choice):
         winning_moves = {
@@ -47,18 +43,17 @@ class Bot():
         previous_opponent_choice -= 1
 
         if not(previous_opponent_choice in [0, 1, 2]):
-            print("prefirst step")
+            # print("prefirst step")
             return self.previousSelfChoice
 
         if self.is_win(self.previousSelfChoice, previous_opponent_choice):
-            self.wins_op[previous_opponent_choice] += 1
             self.wins_me[self.previousSelfChoice] += 1
         else:
-            pass
+            self.wins_op[previous_opponent_choice] += 1
     
         self.lap += 1
 
-        print(f"{self.lap}: {self.req[self.previousSelfChoice]} | {self.req[previous_opponent_choice]}    {self.probability}")
+        # print(f"{self.lap}: {self.req[self.previousSelfChoice]}/{self.req[previous_opponent_choice]} | {self.is_win(self.previousSelfChoice, previous_opponent_choice)}   {self.probability}")
 
         self.count_op[previous_opponent_choice] += 1
         self.count_me[self.previousSelfChoice] += 1
@@ -72,16 +67,20 @@ class Bot():
 
 
     def on_game_end(self) -> None:
-        print(f"Процент побед: {sum(self.wins_me) / (self.lap) * 100:.2f}%")
+        print(f"Процент побед: {sum(self.wins_me) / (sum(self.wins_op) + sum(self.wins_me)) * 100:.2f}%")
 
 
 if __name__ == "__main__":
+    raunds = 500
+    sets = 10
+
     bot1 = Bot()
     bot1.on_game_start()
 
-    bot1.choose(52)
-
-    for i in range (0, 100):
-        bot1.choose(randint(1, 3))
-
-    bot1.on_game_end()
+    for i in range (0, sets):
+        bot1.choose(52)
+        
+        for j in range (0, raunds):
+            bot1.choose(randint(1, 3))
+            
+        bot1.on_game_end()

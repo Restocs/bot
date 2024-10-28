@@ -1,86 +1,75 @@
-from random import randint, choices
+from collections import Counter, defaultdict
 
-class Bot():
-    def calculate_probabilities(self, P_A, P_B_given_A, P_B):
-        return (P_B_given_A * P_A) / P_B
-    
-    def is_win(self, self_choice, opponent_choice):
-        winning_moves = {
-            0: 2,  # Камень побеждает ножницы
-            1: 0,  # Бумага побеждает камень
-            2: 1   # Ножницы побеждают бумагу
-        }
-        return winning_moves[self_choice] == opponent_choice
+ROCK = 1  # Камень
+PAPER = 2  # Бумага
+SCISSORS = 3  # Ножницы
+MOVES = [ROCK, PAPER, SCISSORS]
+
+class Bot:
+    def __init__(self):
+        self.opponent_history = []
+        self.move_counter = Counter()
+        self.transition_counter = defaultdict(Counter)
+        self.total_sets = 0
+        self.wins_needed = 0
 
     def set_parameters(self, set_count: int, wins_per_set: int) -> None:
-        pass
-
+        self.total_sets = set_count
+        self.wins_needed = wins_per_set
 
     def on_game_start(self) -> None:
-        self.req = {
-            0: 1,  # Камень
-            1: 2,  # Бумага
-            2: 3  # Ножницы
-        }
-
-        self.probability = [0, 0, 0] # list for op probs 
-
-        self.count_op = [0, 0, 0] # count op moves
-        self.count_me = [0, 0, 0] # count my moves
-
-        self.chance_op = [0, 0, 0] # list for op prob 
-        self.chance_me = [0, 0, 0] # list for my prob 
-
-        self.wins_op = [0, 0, 0] # list for op wins 
-        self.wins_me = [0, 0, 0] # list for my wins 
-
-        self.lap = 0 # count laps and moves litrly
-
-        self.previousSelfChoice = 1
-
+        self.opponent_history.clear()
+        self.move_counter.clear()
+        self.transition_counter.clear()
 
     def choose(self, previous_opponent_choice: int) -> int:
-        previous_opponent_choice -= 1
+        # Обновление истории и частоты переходов
+        if previous_opponent_choice != 0:
+            self.opponent_history.append(previous_opponent_choice)
+            self.move_counter.update([previous_opponent_choice])
 
-        if not(previous_opponent_choice in [0, 1, 2]):
-            # print("prefirst step")
-            return self.previousSelfChoice
+            if len(self.opponent_history) > 1:
+                prev_move = self.opponent_history[-2]
+                self.transition_counter[prev_move][previous_opponent_choice] += 1
 
-        if self.is_win(self.previousSelfChoice, previous_opponent_choice):
-            self.wins_me[self.previousSelfChoice] += 1
+        # Применение предсказания, если данных уже достаточно
+        if len(self.opponent_history) < 1:
+            return ROCK
+
+        predicted_move = self.predict_opponent_move()
+        return self.counter_move(predicted_move)
+
+    def predict_opponent_move(self) -> int:
+        last_move = self.opponent_history[-1]
+        
+        # 1. Предсказание на основе переходов с экспоненциальным сглаживанием
+        if last_move in self.transition_counter:
+            transition_weights = self.transition_counter[last_move]
+            if transition_weights:
+                next_move = max(transition_weights, key=lambda x: transition_weights[x])
+                return next_move
+
+        # 2. Используем общий частотный анализ с учетом веса последних 5 ходов
+        weighted_moves = Counter()
+        weight = 1.0
+        decay = 0.8
+        for move in reversed(self.opponent_history[-10:]):  # Последние 5 ходов с весом
+            weighted_moves[move] += weight
+            weight *= decay
+
+        most_probable_move = max(weighted_moves, key=weighted_moves.get)
+        return most_probable_move
+
+    def counter_move(self, move: int) -> int:
+        # Вероятностный выбор контр-хода
+        if move == ROCK:
+            return PAPER
+        elif move == PAPER:
+            return SCISSORS
         else:
-            self.wins_op[previous_opponent_choice] += 1
-    
-        self.lap += 1
-
-        # print(f"{self.lap}: {self.req[self.previousSelfChoice]}/{self.req[previous_opponent_choice]} | {self.is_win(self.previousSelfChoice, previous_opponent_choice)}   {self.probability}")
-
-        self.count_op[previous_opponent_choice] += 1
-        self.count_me[self.previousSelfChoice] += 1
-
-        for i in range(3):
-            self.probability[i] = self.calculate_probabilities(self.count_op[i] / self.lap, self.wins_op[i] / sum(self.wins_op) if sum(self.wins_op) > 0 else 1 / 3, sum(self.count_op) / self.lap if self.lap > 0 else 1.0)
-
-        res = choices([0, 1, 2], weights=self.probability)[0]
-        self.previousSelfChoice = res
-        return self.req[res]
-
+            return ROCK
 
     def on_game_end(self) -> None:
-        print(f"Процент побед: {sum(self.wins_me) / (sum(self.wins_op) + sum(self.wins_me)) * 100:.2f}%")
-
-
-if __name__ == "__main__":
-    raunds = 500
-    sets = 10
-
-    bot1 = Bot()
-    bot1.on_game_start()
-
-    for i in range (0, sets):
-        bot1.choose(52)
-        
-        for j in range (0, raunds):
-            bot1.choose(randint(1, 3))
-            
-        bot1.on_game_end()
+        self.opponent_history.clear()
+        self.move_counter.clear()
+        self.transition_counter.clear()

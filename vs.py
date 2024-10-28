@@ -140,12 +140,12 @@ def select_files():
     root = Tk()
     root.withdraw()  # Hide the main window
 
-    bot1_file = "BOTINOK.py"
+    bot1_file = "KNBmodUP.py"
     if not bot1_file:
         print("Bot 1 file not selected. Exiting.")
         return
 
-    bot2_file = "KNBmodUP.py"
+    bot2_file = "Bot.py"
     if not bot2_file:
         print("Bot 2 file not selected. Exiting.")
         return

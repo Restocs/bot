@@ -23,7 +23,8 @@ class Bot():
             2: 3  # Ножницы
         }
 
-        self.probability = [0, 0, 0] # list for op probs 
+        self.probability_p = [0, 0, 0] # list for op probs 
+        self.probability_c = [1 / 3, 1 / 3, 1 / 3] # list for op probs 
 
         self.count_op = [0, 0, 0] # count op moves
         self.count_me = [0, 0, 0] # count my moves
@@ -53,15 +54,18 @@ class Bot():
     
         self.lap += 1
 
-        # print(f"{self.lap}: {self.req[self.previousSelfChoice]}/{self.req[previous_opponent_choice]} | {self.is_win(self.previousSelfChoice, previous_opponent_choice)}   {self.probability}")
+        # print(f"{self.lap}: {self.req[self.previousSelfChoice]}/{self.req[previous_opponent_choice]} | {self.is_win(self.previousSelfChoice, previous_opponent_choice)}   {self.probability_p}")
 
         self.count_op[previous_opponent_choice] += 1
         self.count_me[self.previousSelfChoice] += 1
 
         for i in range(3):
-            self.probability[i] = self.calculate_probabilities(self.count_op[i] / self.lap, self.wins_op[i] / sum(self.wins_op) if sum(self.wins_op) > 0 else 1 / 3, sum(self.count_op) / self.lap if self.lap > 0 else 1.0)
+            self.probability_p[i] = self.calculate_probabilities(self.count_op[i] / self.lap, self.wins_op[i] / sum(self.wins_op) if sum(self.wins_op) > 0 else 1 / 3, sum(self.count_op) / self.lap if self.lap > 0 else 1.0)
 
-        res = choices([0, 1, 2], weights=self.probability)[0]
+        # res_p = (choices([0, 1, 2], weights=self.probability_p)[0] + 1) % 3
+        # res_c = (choices([0, 1, 2], weights=self.probability_c)[0] + 1) % 3
+
+        res = (choices([0, 1, 2], weights=[(x + y) / 2 for x, y in zip(self.probability_p, self.probability_c)])[0] + 1) % 3
         self.previousSelfChoice = res
         return self.req[res]
 

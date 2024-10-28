@@ -34,7 +34,7 @@ class Bot:
 
         # Применение предсказания, если данных уже достаточно
         if len(self.opponent_history) < 1:
-            return ROCK
+            return ROCK 
 
         predicted_move = self.predict_opponent_move()
         return self.counter_move(predicted_move)

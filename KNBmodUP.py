@@ -71,6 +71,5 @@ class Bot():
 
 
     def on_game_end(self) -> None:
-        # print(f"Процент побед: {sum(self.wins_me) / (sum(self.wins_op) + sum(self.wins_me)) * 100:.2f}%")
+        # print(f"Процент побед: {sum(self.wins_me) / (sum(self.wins_op) + sum(self.wins_me)) * 100:.2f}%      {(self.wins_op)} {(self.wins_me)}")
         pass
-

@@ -145,7 +145,7 @@ def select_files():
         print("Bot 1 file not selected. Exiting.")
         return
 
-    bot2_file = "Bot.py"
+    bot2_file = "BOTINOK2.0.py"
     if not bot2_file:
         print("Bot 2 file not selected. Exiting.")
         return

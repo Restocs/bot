@@ -6,10 +6,13 @@ from tkinter import Tk, filedialog
 ROCK = 1
 PAPER = 2
 SCISSORS = 3
-MAX_SETS = 20
+MAX_SETS = 40
 WINS_PER_SET = 31
 MAX_ROUNDS_PER_SET = (WINS_PER_SET - 1) * 2
 MAX_CONSECUTIVE_DRAWS = 10
+
+BOT1_FILE = "KNBmodUP.py"
+BOT2_FILE = "bot.py"
 
 # Determine the winner of a round
 def determine_winner(choice1, choice2):
@@ -140,12 +143,12 @@ def select_files():
     root = Tk()
     root.withdraw()  # Hide the main window
 
-    bot1_file = "KNBmodUP.py"
+    bot1_file = BOT1_FILE
     if not bot1_file:
         print("Bot 1 file not selected. Exiting.")
         return
 
-    bot2_file = "bot.py"
+    bot2_file = BOT2_FILE
     if not bot2_file:
         print("Bot 2 file not selected. Exiting.")
         return

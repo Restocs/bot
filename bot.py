@@ -106,6 +106,6 @@ class Bot:
 		Завершение игры и вывод статистики.
 		"""
 		print("Игра закончена!")
-		print("Ходы противника:", self.opponent_history)
-		print("Ходы бота:", self.bot_history)
+		#print("Ходы противника:", self.opponent_history)
+		#print("Ходы бота:", self.bot_history)
 		#print("Окончательные веса:", weights)

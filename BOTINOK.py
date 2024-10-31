@@ -53,7 +53,7 @@ class Bot:
         weighted_moves = Counter()
         weight = 1.0
         decay = 0.8
-        for move in reversed(self.opponent_history[-10:]):  # Последние 5 ходов с весом
+        for move in reversed(self.opponent_history[-5:]):  # Последние 5 ходов с весом
             weighted_moves[move] += weight
             weight *= decay
 
